@@ -1,3 +1,4 @@
 .env
 api/target
 frontend/target
+frontend/dist
