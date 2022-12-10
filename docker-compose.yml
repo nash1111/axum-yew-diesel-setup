@@ -8,6 +8,15 @@ services:
       - 8000:8000
     volumes:
       - ./api:/api
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./frontend:/frontend
+    command: "trunk watch"
   dev-postgres:
     image: postgres:14.4-alpine
     ports:
