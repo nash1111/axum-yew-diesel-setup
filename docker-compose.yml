@@ -1,5 +1,13 @@
 version: '3.8'
 services:
+  api:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./api:/api
   dev-postgres:
     image: postgres:14.4-alpine
     ports:
