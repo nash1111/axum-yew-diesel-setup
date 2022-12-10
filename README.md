@@ -5,13 +5,12 @@ docker compose up --build
 ```
 
 access
-```
-# frontend
+
+frontend
 [localhost:8080](http://localhost:8080/)
 
-# api
+api
 [localhost:8000](http://localhost:8000/)
 
-# db
+db
 psql -h $(hostname -i) -p 5436 -d changethis -U changethis
-```
