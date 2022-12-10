@@ -9,6 +9,7 @@ services:
       POSTGRES_PASSWORD: changethis
       POSTGRES_DB: changethis
     restart: always
+    container_name: pg-container
     networks:
       - net
 networks:
