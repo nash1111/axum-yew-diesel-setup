@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  dev-postgres:
+    image: postgres:14.4-alpine
+    ports:
+      - 5436:5432
+    environment:
+      POSTGRES_USER: changethis
+      POSTGRES_PASSWORD: changethis
+      POSTGRES_DB: changethis
+    restart: always
+    networks:
+      - net
+networks:
+  net:
