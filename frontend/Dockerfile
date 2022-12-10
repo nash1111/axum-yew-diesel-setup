@@ -20,3 +20,4 @@ ENV HOMEBREW_NO_INSTALL_CLEANUP=TRUE
 RUN brew install trunk
 RUN cargo install --locked trunk && \
     cargo install --locked wasm-bindgen-cli
+RUN rustup target add wasm32-unknown-unknown
