@@ -1,15 +1,50 @@
 use axum::{
-    routing::get,
+    http::StatusCode,
+    response::IntoResponse,
+    routing::{get, post},
+    Json,
     Router,
 };
+use serde::{Deserialize, Serialize};
+use std::env;
+use std::net::SocketAddr;
+
 
 #[tokio::main]
 async fn main() {
-    // build our application with a single route
-    let app = Router::new().route("/", get(|| async { "Hello, World!" }));
+    // initialize logger
+    let log_level = env::var("RUST_LOG").unwrap_or("info".to_string());
+    env::set_var("RUST_LOG", log_level);
+    tracing_subscriber::fmt::init();
 
-    axum::Server::bind(&"0.0.0.0:8000".parse().unwrap())
+    // build our application with a single route
+    let app = Router::new().route("/", get(|| async { "Hello, World!" }))
+        .route("/users", post(create_user));
+
+    let addr = &"0.0.0.0:8000".parse().unwrap();
+    axum::Server::bind(addr)
         .serve(app.into_make_service())
         .await
         .unwrap();
+    tracing::debug!("listening on {}", addr);
+}
+
+async fn create_user (Json(payload): Json<CreateUser>)-> impl IntoResponse {
+    let user = User {
+        id: 1337,
+        username: payload.username,
+    };
+    (StatusCode::CREATED, Json(user))
+
+}
+
+#[derive(Deserialize)]
+struct CreateUser {
+    username: String,
+}
+
+#[derive(Serialize)]
+struct User {
+    id: u64,
+    username: String,
 }
