@@ -49,10 +49,7 @@ struct User {
 #[cfg(test)]
 mod test {
     use super::*;
-    use axum::{
-        body::Body,
-        http::{ header, Method, Request},
-    };
+    use axum::{ body::Body, http::{ header, Method, Request } };
     use tower::ServiceExt;
     #[tokio::test]
     async fn should_return_hello_world() {
@@ -62,4 +59,19 @@ mod test {
         let body: String = String::from_utf8(bytes.to_vec()).unwrap();
         assert_eq!(body, "Hello, World!");
     }
+
+    #[tokio::test]
+    async fn should_return_user_data() {
+        let req = Request::builder()
+            .uri("/users")
+            .method(Method::POST)
+            .header(header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+            .body(Body::from(r#"{"username": "John Doe"}"#))
+            .unwrap();
+        let res = create_app().oneshot(req).await.unwrap();
+        let bytes = hyper::body::to_bytes(res.into_body()).await.unwrap();
+        let body: String = String::from_utf8(bytes.to_vec()).unwrap();
+        let user: User = serde_json::from_str(&body).expect("Failed to deserialize user");
+        assert_eq!(user, User { id: 1337, username: "John Doe".to_string() });
     }
+}
